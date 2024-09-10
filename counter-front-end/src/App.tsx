@@ -1,35 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { TonConnectButton } from "@tonconnect/ui-react";
+import { useMainContract } from "./hooks/useMainContract";
+import { useTonConnect } from "./hooks/useTonConnect";
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
+    const { sendIncrement, address, contract_balance, value } = useMainContract(); // destructure the returned values
+    const { connected } = useTonConnect();
+  
   return (
-    <>
+    <div>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <TonConnectButton />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div>
+        <div className='Card'>
+          <b>Our contract Address</b>
+          <div className='Hint'>{address?.slice(0, 30) + "..."}</div> {/* Updated variable */}
+          <b>Our contract Balance</b>
+          <div className='Hint'>{contract_balance}</div> {/* Updated variable */}
+        </div>
+
+        <div className='Card'>
+          <b>Counter Value</b>
+          <div>{value ?? "Loading..."}</div> {/* Updated variable */}
+
+          {connected && (
+              <a
+                onClick={() => {
+                  sendIncrement();
+                }}
+              >
+                Increment
+              </a>
+            )}
+          
+        </div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
